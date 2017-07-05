@@ -1,0 +1,51 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.robert.dao.UserDao">
+
+    <select id="list" resultType="user" useCache="false">
+        SELECT *
+        FROM t_user;
+    </select>
+
+    <select id="getById" parameterType="long" resultType="user">
+        SELECT *
+        FROM t_user
+        WHERE id = #{id}
+    </select>
+
+    <select id="queryUserByYear" parameterType="string" resultType="user">
+        SELECT *
+        FROM t_user
+        <if test="year!=''">
+            <where>
+                year(created) = #{year} OR
+                year(updated) = #{year}
+            </where>
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="user" useGeneratedKeys="true">
+        INSERT INTO t_user (user_name, password, age, created, updated)
+        VALUES (#{userName}, #{password}, #{age}, now(), now());
+    </insert>
+
+    <update id="update" parameterType="user">
+        UPDATE t_user
+        SET user_name = #{userName},
+            password  = #{password},
+            age       = #{age},
+            updated   = now()
+        WHERE id = #{id};
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM t_user
+        WHERE id = #{id}
+    </delete>
+
+    <select id="selectCount" resultType="int">
+        SELECT count(*)
+        FROM t_user;
+    </select>
+</mapper>

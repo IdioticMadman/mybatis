@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.robert.dao.StudentMapper">
+    <resultMap id="studentMap" type="com.robert.vo.Student">
+        <id property="id" column="id"/>
+        <result property="cnname" column="cnname"/>
+        <result property="sex" column="sex" jdbcType="INTEGER" javaType="com.robert.enmu.Sex"
+                typeHandler="com.robert.typehandler.SexTypeHandler"/>
+        <association property="studentSelfcard" column="id"
+                     select="com.robert.dao.StudentSelfcardMapper.findStudentSelfcardByStudentId"/>
+
+        <collection property="studentLectures" column="id"
+                    select="com.robert.dao.StudentLectureMapper.findStudentLectureByStudentId"/>
+
+    </resultMap>
+
+    <select id="getStudent" parameterType="int" resultMap="studentMap">
+        SELECT
+            id,
+            cnname,
+            sex,
+            note
+        FROM t_student
+        WHERE id = #{id}
+    </select>
+</mapper>
